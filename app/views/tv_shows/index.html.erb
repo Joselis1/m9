@@ -21,7 +21,7 @@
   <tbody>
     <% @tv_shows.each do |tv_show| %>
       <tr>
-        <td><img src="<%= tv_show.ruta_img %>" width="80px"></td>
+        <td><%= image_tag(tv_show.ruta_img, title:tv_show.name, width:"80px") %></td>
         <td><%= tv_show.name %></td>
         <td><%= tv_show.summary %></td>
         <td><%= tv_show.release_date %></td>
