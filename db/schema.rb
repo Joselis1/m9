@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_28_213621) do
+ActiveRecord::Schema.define(version: 2022_06_02_210348) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "episodes", force: :cascade do |t|
+    t.integer "episode_number"
+    t.string "title"
+    t.text "summary"
+    t.bigint "tv_show_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["tv_show_id"], name: "index_episodes_on_tv_show_id"
+  end
 
   create_table "tv_shows", force: :cascade do |t|
     t.string "name"
@@ -22,6 +32,8 @@ ActiveRecord::Schema.define(version: 2022_05_28_213621) do
     t.float "rating"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "ruta_img"
   end
 
+  add_foreign_key "episodes", "tv_shows"
 end

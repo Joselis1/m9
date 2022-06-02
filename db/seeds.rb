@@ -46,3 +46,8 @@ TvShow.destroy_all
 end
 
 puts 'finalizado!!!'
+
+
+ts = TvShow.find_by(name: 'game of thrones')
+
+Episode.create(episode_number: 1, title: 'a title', summary: 'summary text', tv_show: ts)
