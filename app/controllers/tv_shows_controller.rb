@@ -1,5 +1,6 @@
 class TvShowsController < ApplicationController
   before_action :set_tv_show, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, except: %i[welcome]
 
   # GET /tv_shows or /tv_shows.json
   def index
@@ -13,6 +14,7 @@ class TvShowsController < ApplicationController
   # GET /tv_shows/new
   def new
     @tv_show = TvShow.new
+    2.times { @tv_show.film_locations.build }
   end
 
   # GET /tv_shows/1/edit
@@ -21,22 +23,22 @@ class TvShowsController < ApplicationController
 
   # GET /tv_shows/1/about
   def about
-    @about = 'Copyright 2022'
+    @about = "Copyright 2022"
     @tv_show = TvShow.find(params[:id])
   end
 
   # GET /tv_shows/search
   def search
-    @search = TvShow.find_by("name LIKE ?", "%#{ params[:query] }%")
+    @search = TvShow.find_by("name LIKE ?", "%#{params[:query]}%")
   end
 
   # POST /tv_shows or /tv_shows.json
   def create
-    @tv_show = TvShow.new(tv_show_params)
-
+    @tv_show = current_user.tv_shows.build(tv_show_params)
+    @tv_show.nationality = Nationality.find(params[:tv_show][:nationality_id]) || Nationality.last
     respond_to do |format|
       if @tv_show.save
-        format.html { redirect_to tv_show_url(@tv_show), notice: "Tv show was successfully created." }
+        format.html { redirect_to tv_show_url(@tv_show), notice: "Creado Satisfactoriamente" }
         format.json { render :show, status: :created, location: @tv_show }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -58,7 +60,6 @@ class TvShowsController < ApplicationController
     end
   end
 
-
   # DELETE /tv_shows/1 or /tv_shows/1.json
   def destroy
     @tv_show.destroy
@@ -70,13 +71,23 @@ class TvShowsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_tv_show
-      @tv_show = TvShow.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def tv_show_params
-      params.require(:tv_show).permit(:name, :summary, :release_date, :rating, :ruta_img)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_tv_show
+    @tv_show = TvShow.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def tv_show_params
+    params.require(:tv_show).permit(
+      :name,
+      :summary,
+      :release_date,
+      :rating,
+      :ruta_img,
+      :nationality_id,
+      film_locations_attributes: [:id, :name, :indoor],
+      genre_ids: [],
+    )
+  end
 end

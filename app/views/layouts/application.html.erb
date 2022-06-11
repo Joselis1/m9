@@ -11,8 +11,18 @@
     <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
-
-  <body>
-    <%= yield %>
-  </body>
+<body>
+  <% if user_signed_in? %>
+      <div>
+          <p>Bienvenido <%= current_user.email %>!!</p>
+          <%= link_to 'Cerrar Sesión', destroy_user_session_path, method: :delete %>
+      </div>
+  <% else %>
+      <div style="text-align:right">
+          <%= link_to 'Registro', new_user_registration_path %> |
+          <%= link_to 'Ingresar', new_user_session_path %>
+      </div>
+  <% end %>
+  <%= yield %>
+</body>
 </html>
