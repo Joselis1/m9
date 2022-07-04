@@ -1,7 +1,7 @@
 # USUARIO
 
 Para poder ingresar debe usar el siguiente usuario
-#Usuario:
+* Usuario:
 user1@gmail.com
-#Contraseña:
+* Contraseña:
 123456
